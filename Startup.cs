@@ -30,23 +30,43 @@ namespace WebApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            // Register the Swagger Generator service. This service is responsible for genrating Swagger Documents.
-            // Note: Add this service at the end after AddMvc() or AddMvcCore().
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new OpenApiInfo
+
+                // Register the Swagger Generator service. This service is responsible for genrating Swagger Documents.
+                // Note: Add this service at the end after AddMvc() or AddMvcCore().
+                services.AddControllers();
+
+                services.AddSwaggerGen(c =>
                 {
-                    Title = "Zomato API",
-                    Version = "v1",
-                    Description = "Description for the API goes here.",
-                    Contact = new OpenApiContact
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "TheCodeBuzz-Service", Version = "v1" });
+
+                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.ApiKey,
+                    Scheme = "Bearer",
+                    BearerFormat = "JWT",
+                    In = ParameterLocation.Header,
+                    Description = "JWT Authorization header using the Bearer scheme."
+                });
+
+                    c.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
                     {
-                        Name = "Ankush Jain",
-                        Email = string.Empty,
-                        Url = new Uri("https://coderjony.com/"),
-                    },
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer"
+                            }
+                        },
+                        new string[] { }
+                    }
                 });
             });
+
+
+
             // use sql server db in production and sqlite db in development
             if (_env.IsProduction())
                 services.AddDbContext<DataContext>();
@@ -110,6 +130,8 @@ namespace WebApi
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, DataContext dataContext)
         {
+
+
             // migrate any database changes on startup (includes initial db creation)
             dataContext.Database.Migrate();
 
@@ -135,6 +157,10 @@ namespace WebApi
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+            });
 
             app.UseEndpoints(endpoints => endpoints.MapControllers());
         }
