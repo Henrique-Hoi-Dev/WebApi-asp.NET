@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebApi.Helpers;
 
-namespace WebApi.Migrations.SqliteMigrations
+namespace WebApi.Migrations.SqliteMigration
 {
     [DbContext(typeof(SqliteDataContext))]
     partial class SqliteDataContextModelSnapshot : ModelSnapshot
@@ -15,6 +15,23 @@ namespace WebApi.Migrations.SqliteMigrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "3.1.8");
+
+            modelBuilder.Entity("WebApi.Entities.Comentario", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Descricao")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Comentarios");
+                });
 
             modelBuilder.Entity("WebApi.Entities.Produto", b =>
                 {

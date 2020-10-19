@@ -85,7 +85,6 @@ namespace WebApi.Controllers
             }
             catch (AppException ex)
             {
-                // return error message if there was an exception  
                 // retornar mensagem de erro se houver uma exceção
                 return BadRequest(new { message = ex.Message });
             }

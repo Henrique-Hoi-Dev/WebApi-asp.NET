@@ -22,6 +22,7 @@ namespace WebApi.Helpers
 
         public DbSet<Produto> Produtos { get; set; }
 
+        public DbSet<Comentario> Comentarios { get; set; }
         
     }
 }
